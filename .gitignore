@@ -1,0 +1,26 @@
+# Build
+build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+
+# VS Code
+.vscode/
+
+# Visual Studio
+.vs/
+
+# Binaries
+*.exe
+*.out
+
+# Object files
+*.obj
+*.o
+
+# Debug files
+*.pdb
+*.ilk
+
+# Logs
+*.log
