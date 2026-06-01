@@ -2,7 +2,7 @@
 
 
 int main() {
-    // test123
+    // test
     dataBase db("notes.db");
 
     db.getConnection();
