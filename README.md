@@ -15,6 +15,6 @@ The application will implement:
 
 
 
-## Lisence
+## License
 
 This project is distributed under the MIT License.
