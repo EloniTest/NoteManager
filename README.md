@@ -1,4 +1,4 @@
-## NoteManager - desktop note-taking application
+## NoteManager - desktop note-taking application on C++
 This application is designed to allow you to create and use notes for your own purposes. 
 The application will implement:
 * Creating a note
@@ -8,3 +8,13 @@ The application will implement:
 * Reminder about a note after a while
 
 ## How this works?
+
+
+
+## Installation guide
+
+
+
+## Lisence
+
+This project is distributed under the MIT License.
