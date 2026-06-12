@@ -1,5 +1,7 @@
-#include "dataBase.h"
-#include "Notes.h";
+#include "Database.h"
+#include "Notes.h"
+
+#include <iostream>
 
 int main() {
     // test
@@ -11,7 +13,15 @@ int main() {
 
     note.addNote("Изучить SQLite","Разобраться в его ебучем непонятном синтаксисе");
 
-    
+    auto allNotes = note.getAllNote();
+
+    for(const auto& note : allNotes) {
+        std::cout 
+        << note.id << "\n"
+        << note.title << "\n"
+        << note.content << "\n"
+        << note.created_at << "\n\n";
+    }
 
     return 0;
 }

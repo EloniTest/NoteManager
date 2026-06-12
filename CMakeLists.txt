@@ -10,6 +10,7 @@ add_executable(
     NoteManager
     src/main.cpp
     src/Database.cpp
+    src/Notes.cpp
     lib/sqlite3/sqlite3.c
 )
 
