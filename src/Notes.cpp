@@ -1,4 +1,31 @@
 #include <iostream>
 #include "Notes.h"
 
-Notes::Notes()
+Notes::Notes(sqlite3* dataBase) {
+    db = dataBase;
+}
+
+void Notes::addNote(const std::string &title, const std::string &content) {
+    const char* sql =
+    "INSERT INTO notes "
+    "(title, content, created_at)"
+    "VALUES(?,?,datetime('now'))";
+
+    sqlite3_stmt* stmt;
+    // проверка на подготовленность запроса
+    if(sqlite3_prepare_v2(db,sql,-1,&stmt,nullptr) != SQLITE_OK) {
+        std::cout << "1";
+        return;
+    }
+    // передать строку
+    sqlite3_bind_text(stmt, 1, title.c_str(),-1,SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt,2,content.c_str(),-1,SQLITE_TRANSIENT);
+
+    // проверка полной передачи данных
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        std::cout << "2";
+        return;
+    }
+    
+    sqlite3_finalize(stmt);
+}

@@ -13,8 +13,10 @@ struct Note {
 
 class Notes {
     private:
-        
+        sqlite3* db;
     public:
+        // ключевое слово - запрещает неявное преобразование через конструктор
+        explicit Notes(sqlite3* dataBase);
         void addNote(const std::string &title, const std::string &content);
         void removeNote(int id);
         void updateNote(int id, const std::string &title, const std::string &content);
