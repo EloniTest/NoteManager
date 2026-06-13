@@ -3,6 +3,24 @@
 
 Notes::Notes(sqlite3* dataBase) {
     db = dataBase;
+
+    if (db) {
+        const char* createTableSql =
+            "CREATE TABLE IF NOT EXISTS notes ("
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "title TEXT NOT NULL, "
+            "content TEXT NOT NULL, "
+            "created_at TEXT NOT NULL" 
+            ");";
+
+        char* errMsg = nullptr;
+        if (sqlite3_exec(db, createTableSql, nullptr, nullptr, &errMsg) != SQLITE_OK) {
+            std::cout << "SQLite error creating table: " << (errMsg ? errMsg : "unknown") << "\n";
+            if (errMsg) {
+                sqlite3_free(errMsg);
+            }
+        }
+    }
 }
 // метод добавление записи
 void Notes::addNote(const std::string &title, const std::string &content) {
@@ -12,8 +30,12 @@ void Notes::addNote(const std::string &title, const std::string &content) {
     "VALUES(?,?,datetime('now'))";
 
     sqlite3_stmt* stmt;
+    if (!db) {
+        std::cout << "SQLite error: database connection is not open\n";
+        return;
+    }
     // проверка на подготовленность запроса
-    if(sqlite3_prepare_v2(db,sql,-1,&stmt,nullptr) != SQLITE_OK) {
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
         std::cout << "SQLite error: " << sqlite3_errmsg(db) << "\n";
         return;
     }
@@ -23,7 +45,8 @@ void Notes::addNote(const std::string &title, const std::string &content) {
 
     // проверка полной передачи данных
     if (sqlite3_step(stmt) != SQLITE_DONE) {
-        std::cout << "2";
+        std::cout << "SQLite error: " << sqlite3_errmsg(db) << "\n";
+        sqlite3_finalize(stmt);
         return;
     }
     
@@ -40,24 +63,32 @@ std::vector<Note> Notes::getAllNote() {
 
     sqlite3_stmt* stmt;
 
+    if (!db) {
+        std::cout << "SQLite error: database connection is not open\n";
+        return notes;
+    }
+
     // проверка на подготовленность запроса
-    if(sqlite3_prepare_v2(db,sql,-1,&stmt,nullptr) != SQLITE_OK) {
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
         std::cout << "SQLite error: " << sqlite3_errmsg(db) << "\n";
         return notes;
     }
 
-    while(sqlite3_step(stmt) == SQLITE_ROW) {
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
         Note note;
 
-        note.id = sqlite3_column_int(stmt,0);
+        note.id = sqlite3_column_int(stmt, 0);
 
-        note.title = sqlite3_column_int(stmt,1);
+        const unsigned char* titleText = sqlite3_column_text(stmt, 1);
+        note.title = titleText ? reinterpret_cast<const char*>(titleText) : "";
 
-        note.content = sqlite3_column_int(stmt,2);
+        const unsigned char* contentText = sqlite3_column_text(stmt, 2);
+        note.content = contentText ? reinterpret_cast<const char*>(contentText) : "";
 
-        note.created_at = sqlite3_column_int(stmt,3);
+        const unsigned char* createdAtText = sqlite3_column_text(stmt, 3);
+        note.created_at = createdAtText ? reinterpret_cast<const char*>(createdAtText) : "";
 
-        notes.push_back(note);
+        notes.push_back(std::move(note));
     }
     sqlite3_finalize(stmt);
     return notes;

@@ -3,15 +3,15 @@
 #include <string>
 #include "sqlite3.h"
 
-class dataBase {
+class Database {
     private:
-        sqlite3* db;
+        sqlite3* db = nullptr;
     public:
         // конструктор
-        dataBase(const std::string &fileName);
+        Database(const std::string &fileName);
         // деструктор
-        ~dataBase();
+        ~Database();
 
         sqlite3* getConnection();
-        void createTables();
+        bool isOpen() const;
 };

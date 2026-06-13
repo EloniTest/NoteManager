@@ -6,6 +6,9 @@ include_directories(
     lib/sqlite3
 )
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 add_executable(
     NoteManager
     src/main.cpp
@@ -14,3 +17,5 @@ add_executable(
     lib/sqlite3/sqlite3.c
 )
 
+set_property(TARGET NoteManager PROPERTY
+    VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})

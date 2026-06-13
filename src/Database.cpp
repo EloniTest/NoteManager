@@ -2,36 +2,30 @@
 #include <iostream>
 
 // конструктор
-dataBase::dataBase(const std::string &fileName) {
-    if (sqlite3_open(fileName.c_str(), &db) !=SQLITE_OK) {
-        std::cerr << "Database error\n";
+Database::Database(const std::string &fileName) {
+    db = nullptr;
+    int result = sqlite3_open_v2(fileName.c_str(), &db,
+        SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE,
+        nullptr);
+    if (result != SQLITE_OK) {
+        std::cerr << "Database error opening '" << fileName << "': "
+                  << sqlite3_errmsg(db) << "\n";
+        if (db) {
+            sqlite3_close(db);
+            db = nullptr;
+        }
     }
 }
 // деструктор
-dataBase::~dataBase() {
-    sqlite3_close(db);
+Database::~Database() {
+    if (db) sqlite3_close(db);
 }
 // метод getConnection
-sqlite3* dataBase::getConnection() {
-    std::cout << "database class connected successfully\n";
+sqlite3* Database::getConnection() {
     return db;
 }
 
-void dataBase::createTables()
-{
-    const char* sql =
-        "CREATE TABLE IF NOT EXISTS notes ("
-        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-        "title TEXT NOT NULL,"
-        "content TEXT NOT NULL,"
-        "created_at TEXT NOT NULL"
-        ");";
-
-    char* errMsg = nullptr;
-
-    if(sqlite3_exec(db, sql, nullptr, nullptr, &errMsg) != SQLITE_OK)
-    {
-        std::cout << errMsg << '\n';
-        sqlite3_free(errMsg);
-    }
+bool Database::isOpen() const {
+    return db != nullptr;
 }
+
