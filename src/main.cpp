@@ -39,11 +39,11 @@ int main() {
 
     // тесты
     Notes note(db.getConnection());
-
-    std::cout << "\n... Добавление заметки ...\n";
+    std::cout << "Testing database operations...\n";
+    std::cout << "\n... Adding a note ...\n";
     note.addNote("Изучить SQLite", "Разобраться в его ебучем непонятном синтаксисе");
 
-    std::cout << "\n... Все заметки после добавления ...\n";
+    std::cout << "\n... All notes after adding ...\n";
     auto allNotes = note.getAllNote();
     
     for (const auto& item : allNotes) {
@@ -58,7 +58,7 @@ int main() {
         int firstId = allNotes[0].id;
         int secondId = allNotes[1].id;
 
-        std::cout << "\n... Обновление заметки с id= " << firstId << " ...\n";
+        std::cout << "\n... Обновление заметки с id = " << firstId << " ...\n";
         note.updateNote(firstId, "Изучить SQLite (обновлено)", "Теперь я понимаю, как это работает");
 
         std::cout << "\n... Все заметки после обновления ...\n";
@@ -86,9 +86,16 @@ int main() {
                 << item.content << "\n"
                 << item.created_at << "\n\n";
         }
+
+        std::cout << "Testing completed\n";
     } else {
         std::cout << "Заметок нет, тест обновления и удаления пропущен.\n";
     }
+
+    
+
+    // main
+
 
     return 0;
 }
