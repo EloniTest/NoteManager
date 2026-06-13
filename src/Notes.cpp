@@ -14,7 +14,7 @@ void Notes::addNote(const std::string &title, const std::string &content) {
     sqlite3_stmt* stmt;
     // проверка на подготовленность запроса
     if(sqlite3_prepare_v2(db,sql,-1,&stmt,nullptr) != SQLITE_OK) {
-        std::cout << "1";
+        std::cout << "SQLite error: " << sqlite3_errmsg(db) << "\n";
         return;
     }
     // передать строку
@@ -42,7 +42,7 @@ std::vector<Note> Notes::getAllNote() {
 
     // проверка на подготовленность запроса
     if(sqlite3_prepare_v2(db,sql,-1,&stmt,nullptr) != SQLITE_OK) {
-        std::cout << "Ошибка подготовки запроса\n";
+        std::cout << "SQLite error: " << sqlite3_errmsg(db) << "\n";
         return notes;
     }
 

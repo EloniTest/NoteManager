@@ -2,8 +2,12 @@
 #include "Notes.h"
 
 #include <iostream>
-
+#include <windows.h>
 int main() {
+
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+    
     // test
     dataBase db("notes.db");
 

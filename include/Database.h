@@ -13,4 +13,5 @@ class dataBase {
         ~dataBase();
 
         sqlite3* getConnection();
+        void createTables();
 };
