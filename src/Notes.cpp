@@ -3,7 +3,7 @@
 
 Notes::Notes(sqlite3* dataBase) {
     db = dataBase;
-
+    // навайбкодено для исправления ошибки "no such table: notes"
     if (db) {
         const char* createTableSql =
             "CREATE TABLE IF NOT EXISTS notes ("
@@ -40,8 +40,8 @@ void Notes::addNote(const std::string &title, const std::string &content) {
         return;
     }
     // передать строку
-    sqlite3_bind_text(stmt, 1, title.c_str(),-1,SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt,2,content.c_str(),-1,SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, title.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, content.c_str(), -1, SQLITE_TRANSIENT);
 
     // проверка полной передачи данных
     if (sqlite3_step(stmt) != SQLITE_DONE) {
@@ -50,6 +50,60 @@ void Notes::addNote(const std::string &title, const std::string &content) {
         return;
     }
     
+    sqlite3_finalize(stmt);
+}
+// метод обновление записи
+void Notes::updateNote(int id, const std::string &title, const std::string &content) {
+    const char* sql =
+    "UPDATE notes SET title = ?, content = ? WHERE id = ?";
+
+    sqlite3_stmt* stmt;
+    if (!db) {
+        std::cout << "SQLite error: database connection is not open\n";
+        return;
+    }
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cout << "SQLite error: " << sqlite3_errmsg(db) << "\n";
+        return;
+    }
+
+    sqlite3_bind_text(stmt, 1, title.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, content.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, 3, id);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        std::cout << "SQLite error: " << sqlite3_errmsg(db) << "\n";
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+}
+
+void Notes::removeNote(int id) {
+    const char* sql =
+    "DELETE FROM notes WHERE id = ?";
+
+    sqlite3_stmt* stmt;
+    if (!db) {
+        std::cout << "SQLite error: database connection is not open\n";
+        return;
+    }
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cout << "SQLite error: " << sqlite3_errmsg(db) << "\n";
+        return;
+    }
+
+    sqlite3_bind_int(stmt, 1, id);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        std::cout << "SQLite error: " << sqlite3_errmsg(db) << "\n";
+        sqlite3_finalize(stmt);
+        return;
+    }
+
     sqlite3_finalize(stmt);
 }
 
