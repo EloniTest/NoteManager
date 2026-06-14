@@ -56,7 +56,6 @@ int main() {
 
     if (!allNotes.empty()) {
         int firstId = allNotes[0].id;
-        int secondId = allNotes[1].id;
 
         std::cout << "\n... Обновление заметки с id = " << firstId << " ...\n";
         note.updateNote(firstId, "Изучить SQLite (обновлено)", "Теперь я понимаю, как это работает");
@@ -72,30 +71,38 @@ int main() {
                 << item.created_at << "\n\n";
         }
 
-        std::cout << "\n... Удаление всех заметок ...\n";
+        std::cout << "\n... Удаление заметки с id = " << firstId << " ...\n";
         note.removeNote(firstId);
-        note.removeNote(secondId);
 
         std::cout << "\n... Все заметки после удаления ...\n";
         allNotes = note.getAllNote();
 
-        for (const auto& item : allNotes) {
-            std::cout
-                << item.id << "\n"
-                << item.title << "\n"
-                << item.content << "\n"
-                << item.created_at << "\n\n";
+        if (allNotes.empty()) {
+            std::cout << "Все заметки удалены. Вектор пуст.\n";
+        } else {
+            for (const auto& item : allNotes) {
+                std::cout
+                    << item.id << "\n"
+                    << item.title << "\n"
+                    << item.content << "\n"
+                    << item.created_at << "\n\n";
+            }
         }
 
-        std::cout << "Testing completed\n";
+        std::cout << "\nTesting completed\n";
     } else {
         std::cout << "Заметок нет, тест обновления и удаления пропущен.\n";
     }
 
-    
-
     // main
 
+    std::cout << "Меню заметок\n";
+    std::cout << "1. Добавить заметку\n";
+    std::cout << "2. Показать все заметки\n";
+    std::cout << "3. Удалить заметку\n";
+    std::cout << "4. Обновить заметку\n";
+
+    
 
     return 0;
 }
