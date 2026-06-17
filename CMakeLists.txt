@@ -11,11 +11,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(
     NoteManager
+    src/tests.cpp
     src/main.cpp
     src/Database.cpp
     src/Notes.cpp
     lib/sqlite3/sqlite3.c
 )
+
 
 set_property(TARGET NoteManager PROPERTY
     VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
