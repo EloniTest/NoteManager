@@ -11,7 +11,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(
     NoteManager
-    src/tests.cpp
     src/main.cpp
     src/Database.cpp
     src/Notes.cpp

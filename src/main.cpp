@@ -8,14 +8,21 @@
 
 // возвращает путь к файлу notes.db
 // если программа запущена из build/Debug, то путь будет поднят на два уровня вверх
+static std::filesystem::path getDatabasePath() {
+    char exePath[MAX_PATH] = {0};
+    DWORD length = GetModuleFileNameA(NULL, exePath, MAX_PATH);
+    if (length == 0 || length == MAX_PATH) {
+        return std::filesystem::path("data") / "notes.db";
+    }
 
+    std::filesystem::path exeDir = std::filesystem::path(exePath).parent_path();
+    auto dbPath = exeDir / ".." / ".." / "data" / "notes.db";
+    return dbPath.lexically_normal();
+}
 
 int main() {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
-
-    databaseTester tester(getDatabasePath());
-    tester.run();
 
     std::cout << "Меню заметок\n";
     std::cout << "1. Добавить заметку\n";
